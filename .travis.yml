@@ -1,5 +1,6 @@
 language: java
 jdk: openjdk16
+
 script:
 - java --version
 - "./mvnw clean install"
