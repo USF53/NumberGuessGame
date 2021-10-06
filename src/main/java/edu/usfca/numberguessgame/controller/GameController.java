@@ -14,7 +14,7 @@ public class GameController {
     @Autowired
     GameService gameService;
 
-    @RequestMapping(value = "/set_bound", method = RequestMethod.GET)
+    @RequestMapping(value = "/setBound", method = RequestMethod.GET)
     public String setBound(@RequestParam String lowerBound, @RequestParam String upperBound) {
         return gameService.handleSetBound(lowerBound, upperBound);
     }
