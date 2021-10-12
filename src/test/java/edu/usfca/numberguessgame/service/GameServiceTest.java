@@ -26,6 +26,14 @@ public class GameServiceTest {
         assertTrue(result);
     }
     @Test
+    void testValidateUserBoundInputEmpty() {
+        String input = "";
+        boolean result = gameService.validateUserBoundInput(input);
+
+        assertFalse(result);
+    }
+
+    @Test
     void testValidateUserBoundInputNegative(){
         String input = "-9";
         boolean result = gameService.validateUserBoundInput(input);
@@ -118,6 +126,15 @@ public class GameServiceTest {
 
         String exceptedOutput = "Error! Make Sure You Entered Valid Bounds";
         String result = gameService.handleSetBound("str","alr");
+
+        assertEquals(exceptedOutput,result);
+    }
+
+    @Test
+    void testHandleSetBoundEmpty(){
+
+        String exceptedOutput = "Error! Make Sure You Entered Valid Bounds";
+        String result = gameService.handleSetBound("","");
 
         assertEquals(exceptedOutput,result);
     }
