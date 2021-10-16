@@ -42,14 +42,16 @@
     <p>You guess a Number!</p>
 </div>
 
+<script>
 
+</script>
 
 
 <div class="content">
     <h1>The game is about to begin...</h1>
-    <form action="/action_page.php">
-        <label for="fname">Guess, if you dare:</label><br>
-        <input type="text" id="fname" name="fname" placeholder="Enter Number"><br>
+    <form action="handleGuess" method="get">
+        <label for="number">Guess, if you dare:</label><br>
+        <input type="text" id="number" name="number" placeholder="Enter Number"><br>
         <div class="button">
             <input type="submit" value="Submit">
         </div>
