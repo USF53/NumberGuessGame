@@ -23,7 +23,7 @@ public class GameServiceTest {
         String input = "123";
         int result = gameService.validateUserBoundInput(input);
 
-        assertEquals(input,result);
+        assertEquals(123,result);
     }
     @Test
     void testValidateUserBoundInputEmpty() {
