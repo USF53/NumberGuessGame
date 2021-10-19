@@ -1,78 +1,42 @@
 package edu.usfca.numberguessgame.controller;
 
 import edu.usfca.numberguessgame.service.GameService;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
-import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.MvcResult;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RestController;
 
-import java.util.Arrays;
 
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-
-@ExtendWith(SpringExtension.class)
-@WebMvcTest(GameController.class)
-@ContextConfiguration(classes = {GameController.class, GameService.class})
-public class GameControllerTest {
+//@RestController
+@Controller
+public class GameController {
 
     @Autowired
-    private MockMvc mvc;
-
-    @Autowired
-    GameController gameController;
-
-    @Test
-    public void testSetBoundValid() throws Exception {
-        MvcResult mvcResult = mvc.perform(get("/setBound")
-                        .param("lowerBound", "1")
-                        .param("upperBound", "10"))
-                .andDo(print())
-                .andExpect(status().isOk())
-                .andReturn();
-
-        String response = mvcResult.getResponse().getContentAsString();
-        String expected = "Your Input Is Valid. Please Try To Guess It!";
-
-        assertEquals(expected, response);
+    GameService gameService;
+    
+    // Main View
+    @GetMapping(value = { "", "/" })
+    public String main(Model model) {
+    	return "main";
     }
 
-    @Test
-    public void testSetBoundReverse() throws Exception {
-        MvcResult mvcResult = mvc.perform(get("/setBound")
-                        .param("lowerBound", "100")
-                        .param("upperBound", "10"))
-                .andDo(print())
-                .andExpect(status().isOk())
-                .andReturn();
-
-        String response = mvcResult.getResponse().getContentAsString();
-        String expected = "Error! Make Sure Upper Bound Is Greater Than Lower Bound";
-
-        assertEquals(expected, response);
+    // Should return the "guess" view
+    @RequestMapping(value = "/setBound", method = RequestMethod.POST)
+    public String setBound(@RequestParam String lowerBound, @RequestParam String upperBound) {
+    	
+        return gameService.handleSetBound(lowerBound, upperBound);
     }
 
-
-    @Test
-    public void testGuess() throws Exception {
-        gameController.setBound("1","10");
-
-        MvcResult mvcResult = mvc.perform(get("/guess")
-                        .param("number","6"))
-                .andDo(print())
-                .andExpect(status().isOk())
-                .andReturn();
-
-        String response = mvcResult.getResponse().getContentAsString();
-        String [] message = {"Too Small!", "Too Large!","Correct!","Error! make Sure You Entered An Positive Integer"};
-
-        assertTrue(Arrays.asList(message).contains(response));
+    // If the answer is correct then return "congrats" view otherwise return "guess" view again
+    @ResponseBody
+    @RequestMapping(value = "/guess", method = RequestMethod.POST)
+    public String guess(Model model, @RequestBody String number) {
+        return gameService.handleGuess(number);
     }
 }
