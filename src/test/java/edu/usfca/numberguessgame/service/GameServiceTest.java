@@ -21,40 +21,40 @@ public class GameServiceTest {
     @Test
     void testValidateUserBoundInput() {
         String input = "123";
-        boolean result = gameService.validateUserBoundInput(input);
+        int result = gameService.validateUserBoundInput(input);
 
-        assertTrue(result);
+        assertEquals(input,result);
     }
     @Test
     void testValidateUserBoundInputEmpty() {
         String input = "";
-        boolean result = gameService.validateUserBoundInput(input);
+        int result = gameService.validateUserBoundInput(input);
 
-        assertFalse(result);
+        assertEquals(-1,result);
     }
 
     @Test
     void testValidateUserBoundInputNegative(){
         String input = "-9";
-        boolean result = gameService.validateUserBoundInput(input);
+        int result = gameService.validateUserBoundInput(input);
 
-        assertFalse(result);
+        assertEquals(-1,result);
     }
 
     @Test
     void testValidateUserBoundInputString(){
         String input = "string";
-        boolean result = gameService.validateUserBoundInput(input);
+        int result = gameService.validateUserBoundInput(input);
 
-        assertFalse(result);
+        assertEquals(-1,result);
     }
 
     @Test
     void testValidateUserBoundInputSymbol(){
         String input = "..63/*%";
-        boolean result = gameService.validateUserBoundInput(input);
+        int result = gameService.validateUserBoundInput(input);
 
-        assertFalse(result);
+        assertEquals(-1,result);
     }
 
     @Test
