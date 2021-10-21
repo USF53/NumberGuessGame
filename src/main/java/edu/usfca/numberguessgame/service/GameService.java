@@ -1,4 +1,5 @@
 package edu.usfca.numberguessgame.service;
+import edu.usfca.numberguessgame.models.Session;
 
 import org.springframework.stereotype.Service;
 
@@ -6,6 +7,7 @@ import org.springframework.stereotype.Service;
 public class GameService {
 
     private int target;
+    public Session session = new Session();
 
     private int getTarget() {
         return target;
@@ -63,6 +65,10 @@ public class GameService {
         if (validateUserBoundInput(lowerBound) && validateUserBoundInput(upperBound)) {
             int lower = Integer.parseInt(lowerBound);
             int upper = Integer.parseInt(upperBound);
+
+            session.setLowerBound(lowerBound);
+            session.setUpperBound(upperBound);
+            session.setGeneratorValue(target);
 
             if (boundCheck(lower, upper)) {
                 setTarget(generateRandomInt(lower, upper));

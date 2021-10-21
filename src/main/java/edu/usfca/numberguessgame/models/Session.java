@@ -1,7 +1,7 @@
 package edu.usfca.numberguessgame.models;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
-@Document(collection = "users")
+@Document(collection = "sessions")
 public class Session {
     @Id
     private String id;
@@ -12,6 +12,7 @@ public class Session {
     public String getId() {
         return id;
     }
+
     public void setId(String id) {
         this.id = id;
     }
