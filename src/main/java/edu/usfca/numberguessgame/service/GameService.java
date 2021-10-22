@@ -1,19 +1,15 @@
 package edu.usfca.numberguessgame.service;
 
+import edu.usfca.numberguessgame.model.User;
+import edu.usfca.numberguessgame.repository.UserRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
 public class GameService {
 
-    private int target;
-
-    private int getTarget() {
-        return target;
-    }
-
-    private void setTarget(int target) {
-        this.target = target;
-    }
+    @Autowired
+    private UserRepository repository;
 
     /**
      * return false if the input is not an integer or it is smaller than 0
@@ -59,13 +55,15 @@ public class GameService {
     /**
      * message generator for Set bound
      */
-    public String handleSetBound(String lowerBound, String upperBound) {
+    public String handleSetBound(String lowerBound, String upperBound, String userId) {
         if (validateUserBoundInput(lowerBound) && validateUserBoundInput(upperBound)) {
             int lower = Integer.parseInt(lowerBound);
             int upper = Integer.parseInt(upperBound);
 
             if (boundCheck(lower, upper)) {
-                setTarget(generateRandomInt(lower, upper));
+//                setTarget(generateRandomInt(lower, upper));
+                int target = generateRandomInt(lower, upper);
+                repository.save(new User(userId, target, lower, upper));
                 return "Your Input Is Valid. Please Try To Guess It!";
             } else {
                 return "Error! Make Sure Upper Bound Is Greater Than Lower Bound";
@@ -78,9 +76,14 @@ public class GameService {
      * message generator for Guess
      */
 
-    public String handleGuess(String number) {
+    public String handleGuess(String number, String userId) {
         int parsedNumber;
-        int target = getTarget();
+        User user = repository.findByUserId(userId);
+        if(user == null) {
+            return "Error! The userId is not found";
+        }
+
+        int target = user.getTarget();
 
         try {
             parsedNumber = Integer.parseInt(number);
