@@ -81,25 +81,23 @@ public class GameService {
     public String handleGuess(String number) {
         int parsedNumber;
         int target = getTarget();
-
-        try {
+        if(number.matches("[0-9]+")){
             parsedNumber = Integer.parseInt(number);
-        } catch (Exception e) {
+            int compareResult = verifyGuess(target, parsedNumber);
+            if (parsedNumber<0){
+                return "Error! make Sure You Entered An Positive Integer";
+            }
+            else if(compareResult < 0) {
+                return "Too Small!";
+            }
+            else if(compareResult > 0) {
+                return "Too Large!";
+            }
+            else {
+                return "Correct!";
+            }
+        }else{
             return "Error! Make Sure You Entered An Integer";
-        }
-
-        int compareResult = verifyGuess(target, parsedNumber);
-        if (parsedNumber<0){
-            return "Error! make Sure You Entered An Positive Integer";
-        }
-        else if(compareResult < 0) {
-            return "Too Small!";
-        }
-        else if(compareResult > 0) {
-            return "Too Large!";
-        }
-        else {
-            return "Correct!";
         }
     }
 }

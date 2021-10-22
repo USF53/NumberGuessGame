@@ -19,25 +19,24 @@ public class GameController {
 
     @Autowired
     GameService gameService;
-    
+
     // Main View
     @GetMapping(value = { "", "/" })
     public String main(Model model) {
-    	return "main";
+        return "main";
     }
 
     // Should return the "guess" view
     @RequestMapping(value = "/setBound", method = RequestMethod.POST)
     public String setBound(@RequestParam String lowerBound, @RequestParam String upperBound) {
-    	
+
         return gameService.handleSetBound(lowerBound, upperBound);
     }
 
     // If the answer is correct then return "congrats" view otherwise return "guess" view again
     @ResponseBody
     @RequestMapping(value = "/guess", method = RequestMethod.POST)
-    public String guess(Model model, @RequestBody String number) {
+    public String guess( @RequestBody String number) {
         return gameService.handleGuess(number);
     }
 }
-
