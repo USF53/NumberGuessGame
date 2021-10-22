@@ -116,7 +116,7 @@ public class GameServiceTest {
     void testHandleSetBoundValid(){
 
         String exceptedOutput = "Your Input Is Valid. Please Try To Guess It!";
-        String result = gameService.handleSetBound("1","10");
+        String result = gameService.handleSetBound("1","10", "abc");
 
         assertEquals(exceptedOutput,result);
     }
@@ -125,7 +125,7 @@ public class GameServiceTest {
     void testHandleSetBoundStr(){
 
         String exceptedOutput = "Error! Make Sure You Entered Valid Bounds";
-        String result = gameService.handleSetBound("str","alr");
+        String result = gameService.handleSetBound("str","alr", "abc");
 
         assertEquals(exceptedOutput,result);
     }
@@ -134,7 +134,7 @@ public class GameServiceTest {
     void testHandleSetBoundEmpty(){
 
         String exceptedOutput = "Error! Make Sure You Entered Valid Bounds";
-        String result = gameService.handleSetBound("","");
+        String result = gameService.handleSetBound("","", "abc");
 
         assertEquals(exceptedOutput,result);
     }
@@ -143,7 +143,7 @@ public class GameServiceTest {
     void testHandleSetBoundNegative(){
 
         String exceptedOutput = "Error! Make Sure You Entered Valid Bounds";
-        String result = gameService.handleSetBound("-8","10");
+        String result = gameService.handleSetBound("-8","10", "abc");
 
         assertEquals(exceptedOutput,result);
     }
@@ -152,7 +152,7 @@ public class GameServiceTest {
     void testHandleSetBoundSymbol(){
 
         String exceptedOutput = "Error! Make Sure You Entered Valid Bounds";
-        String result = gameService.handleSetBound("!@#!@$#$%","&^*(");
+        String result = gameService.handleSetBound("!@#!@$#$%","&^*(", "abc");
 
         assertEquals(exceptedOutput,result);
     }
@@ -161,7 +161,7 @@ public class GameServiceTest {
     void testHandleSetBoundReverse(){
 
         String exceptedOutput = "Error! Make Sure Upper Bound Is Greater Than Lower Bound";
-        String result = gameService.handleSetBound("100","1");
+        String result = gameService.handleSetBound("100","1", "abc");
 
         assertEquals(exceptedOutput,result);
     }
@@ -170,7 +170,7 @@ public class GameServiceTest {
     void testHandleGuessString(){
 
         String exceptedOutput = "Error! Make Sure You Entered An Integer";
-        String result = gameService.handleGuess("str");
+        String result = gameService.handleGuess("str", "abc");
 
         assertEquals(exceptedOutput, result);
     }
@@ -179,19 +179,9 @@ public class GameServiceTest {
     void testHandleGuessSymbol(){
 
         String exceptedOutput = "Error! Make Sure You Entered An Integer";
-        String result = gameService.handleGuess("%%%%%%");
+        String result = gameService.handleGuess("%%%%%%", "abc");
 
         assertEquals(exceptedOutput, result);
-    }
-
-    @Test
-    void testHandleGuessCmp(){
-
-        String [] message = {"Too Small!", "Too Large!","Correct!","Error! make Sure You Entered An Positive Integer"};
-        String output = gameService.handleGuess("-9");
-
-        boolean result = Arrays.asList(message).contains(output);
-        assertTrue(result);
     }
 
 }

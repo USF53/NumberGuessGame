@@ -1,5 +1,6 @@
 package edu.usfca.numberguessgame.controller;
 
+import edu.usfca.numberguessgame.request.SetBoundRequest;
 import edu.usfca.numberguessgame.service.GameService;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -33,7 +34,8 @@ public class GameControllerTest {
     public void testSetBoundValid() throws Exception {
         MvcResult mvcResult = mvc.perform(get("/setBound")
                         .param("lowerBound", "1")
-                        .param("upperBound", "10"))
+                        .param("upperBound", "10")
+                        .param("userId", "abc"))
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andReturn();
@@ -48,7 +50,8 @@ public class GameControllerTest {
     public void testSetBoundReverse() throws Exception {
         MvcResult mvcResult = mvc.perform(get("/setBound")
                         .param("lowerBound", "100")
-                        .param("upperBound", "10"))
+                        .param("upperBound", "10")
+                        .param("userId", "abc"))
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andReturn();
@@ -62,10 +65,11 @@ public class GameControllerTest {
 
     @Test
     public void testGuess() throws Exception {
-        gameController.setBound("1","10");
+        gameController.setBound(new SetBoundRequest("1","10", "abc"));
 
         MvcResult mvcResult = mvc.perform(get("/guess")
-                        .param("number","6"))
+                        .param("number","6")
+                        .param("userId", "abc"))
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andReturn();
