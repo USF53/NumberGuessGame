@@ -1,36 +1,21 @@
 package edu.usfca.numberguessgame.controller;
 
-import edu.usfca.numberguessgame.request.GuessRequest;
-import edu.usfca.numberguessgame.request.SetBoundRequest;
-import edu.usfca.numberguessgame.service.GameService;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.RequestMapping;
 
 
-//@RestController
 @Controller
 public class GameController {
+    private static final Logger log = LoggerFactory.getLogger(GameController.class);
 
-    @Autowired
-    GameService gameService;
-
-    // Main View
-    @GetMapping(value = { "", "/" })
+    @RequestMapping(value = { "" })
     public String main(Model model) {
+        log.debug("main running");
+        //model.addAttribute("msg","hello world");
         return "main";
-    }
-
-    @RequestMapping (value = "/setBound", method = RequestMethod.POST)
-    public String setBound(@RequestBody SetBoundRequest request) {
-        gameService.handleSetBound(request.getLowerBound(), request.getUpperBound(), request.getUserId());
-        return "guess";
-    }
-
-    @PostMapping("/guess")
-    public String guess(@RequestBody GuessRequest request) {
-        return gameService.handleGuess(request.getNumber(), request.getUserId());
     }
 }
 

@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th=" http://www.thymeleaf.org">
 <head>
   <title>Page title</title>
   <meta charset="UTF-8">
@@ -15,8 +15,8 @@
     .header {
       padding: 60px;
       text-align: center;
-      background: #949398FF;
-      color: #F4DF4EFF;
+      background: #8B8C8C;
+      color: #F8F1E0;
       font-size: 30px;
     }
 
@@ -24,8 +24,8 @@
     .content {
       padding:200px;
       text-align: center;
-      background: #2C5F2D;
-      color: #97BC62FF;
+      background: #BCCBB0;
+      color: #606F65;
       font-size: 30px;
     }
 
@@ -49,7 +49,7 @@
 
 <div class="content">
   <h1>The game is about to begin...</h1>
-  <form action="/setBound" method="POST">
+  <form action="/guess">
     <input type="text" id="userId" name="userId" placeholder="Enter id"><br>
     <input type="text" id="lowerBound" name="lowerBound" placeholder="Enter lower"><br>
     <input type="text" id="upperBound" name="upperBound" placeholder="Enter lower"><br>
