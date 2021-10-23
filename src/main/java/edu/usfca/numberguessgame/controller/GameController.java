@@ -22,9 +22,10 @@ public class GameController {
         return "main";
     }
 
-    @PostMapping("/setBound")
+    @RequestMapping (value = "/setBound", method = RequestMethod.POST)
     public String setBound(@RequestBody SetBoundRequest request) {
-        return gameService.handleSetBound(request.getLowerBound(), request.getUpperBound(), request.getUserId());
+        gameService.handleSetBound(request.getLowerBound(), request.getUpperBound(), request.getUserId());
+        return "guess";
     }
 
     @PostMapping("/guess")
