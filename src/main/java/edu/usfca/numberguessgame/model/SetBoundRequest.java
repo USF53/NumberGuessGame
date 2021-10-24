@@ -1,14 +1,12 @@
-package edu.usfca.numberguessgame.request;
+package edu.usfca.numberguessgame.model;
 
 public class SetBoundRequest {
     String lowerBound;
     String upperBound;
-    String userId;
 
     public SetBoundRequest(String lowerBound, String upperBound, String userId) {
         this.lowerBound = lowerBound;
         this.upperBound = upperBound;
-        this.userId = userId;
     }
 
     public String getLowerBound() {
@@ -25,13 +23,5 @@ public class SetBoundRequest {
 
     public void setUpperBound(String upperBound) {
         this.upperBound = upperBound;
-    }
-
-    public String getUserId() {
-        return userId;
-    }
-
-    public void setUserId(String userId) {
-        this.userId = userId;
     }
 }

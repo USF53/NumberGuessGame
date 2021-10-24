@@ -1,7 +1,8 @@
 package edu.usfca.numberguessgame.controller;
 
-import edu.usfca.numberguessgame.request.SetBoundRequest;
+import edu.usfca.numberguessgame.model.SetBoundRequest;
 import edu.usfca.numberguessgame.service.GameService;
+
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -65,7 +66,7 @@ public class GameControllerTest {
 
     @Test
     public void testGuess() throws Exception {
-        gameController.setBound(new SetBoundRequest("1","10", "abc"));
+        gameController.setBound(new SetBoundRequest("1","10", "abc"), null, null);
 
         MvcResult mvcResult = mvc.perform(get("/guess")
                         .param("number","6")

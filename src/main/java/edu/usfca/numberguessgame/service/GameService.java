@@ -2,14 +2,18 @@ package edu.usfca.numberguessgame.service;
 
 import edu.usfca.numberguessgame.model.User;
 import edu.usfca.numberguessgame.repository.UserRepository;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.stereotype.Service;
+
+import javax.servlet.http.HttpSession;
 
 @Service
 public class GameService {
 
     @Autowired
-    private UserRepository repository;
+    private MongoTemplate mongoTemplate;
 
     /**
      * return false if the input is not an integer or it is smaller than 0
@@ -55,17 +59,26 @@ public class GameService {
     /**
      * message generator for Set bound
      */
-    public String handleSetBound(String lowerBound, String upperBound, String userId) {
+    public String handleSetBound(String lowerBound, String upperBound, HttpSession session) {
+
         if (validateUserBoundInput(lowerBound) && validateUserBoundInput(upperBound)) {
             int lower = Integer.parseInt(lowerBound);
             int upper = Integer.parseInt(upperBound);
 
             if (boundCheck(lower, upper)) {
-//                setTarget(generateRandomInt(lower, upper));
+
                 int target = generateRandomInt(lower, upper);
-                repository.save(new User(userId, target, lower, upper));
+
+                User user = new User(target, lower, upper);
+
+                User currUser =  mongoTemplate.save(user);
+
+                session.setAttribute("currId", currUser.get_id());
+
+
                 return "Your Input Is Valid. Please Try To Guess It!";
             } else {
+                System.out.println("Error! Make Sure Upper Bound Is Greater Than Lower Bound");
                 return "Error! Make Sure Upper Bound Is Greater Than Lower Bound";
             }
         }
@@ -75,10 +88,13 @@ public class GameService {
     /**
      * message generator for Guess
      */
-
-    public String handleGuess(String number, String userId) {
+    public String handleGuess(String number,HttpSession session) {
         int parsedNumber;
-        User user = repository.findByUserId(userId);
+
+        String currId = (String) session.getAttribute("currId");
+
+        User user = mongoTemplate.findById(currId, User.class);
+
         if(user == null) {
             return "Error! The userId is not found";
         }
