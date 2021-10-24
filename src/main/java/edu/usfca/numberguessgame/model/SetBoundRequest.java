@@ -4,7 +4,7 @@ public class SetBoundRequest {
     String lowerBound;
     String upperBound;
 
-    public SetBoundRequest(String lowerBound, String upperBound, String userId) {
+    public SetBoundRequest(String lowerBound, String upperBound) {
         this.lowerBound = lowerBound;
         this.upperBound = upperBound;
     }
