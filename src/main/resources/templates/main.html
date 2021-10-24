@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>Page title</title>
+  <meta charset="UTF-8">
+  <meta content="width=device-width, initial-scale=1" name="viewport">
+  <style>
+    /* Style the body */
+    body {
+      font-family: Arial;
+      margin: 0;
+    }
+
+    /* Header/Logo Title */
+    .header {
+      padding: 60px;
+      text-align: center;
+      background: #949398FF;
+      color: #F4DF4EFF;
+      font-size: 30px;
+    }
+
+    /* Page Content */
+    .content {
+      padding: 200px;
+      text-align: center;
+      background: #2C5F2D;
+      color: #97BC62FF;
+      font-size: 30px;
+    }
+
+    /* Button */
+    .button {
+
+    }
+  </style>
+</head>
+<body>
+
+<div class="header">
+  <h1>Number Guessing Game</h1>
+  <p>You guess a Number!</p>
+
+  <!--/*@thymesVar id="bound" type="edu"*/-->
+  <p th:text="${bound}"></p>
+</div>
+
+<script>
+
+</script>
+
+
+<div class="content">
+  <h1>The game is about to begin...</h1>
+  <form action="/setBound" method="POST">
+    <input id="lowerBound" name="lowerBound" placeholder="Enter lower" type="text"><br>
+    <input id="upperBound" name="upperBound" placeholder="Enter lower" type="text"><br>
+    <div class="button">
+      <input type="submit" value="Submit">
+    </div>
+  </form>
+</div>
+
+
+</body>
+</html>
+
