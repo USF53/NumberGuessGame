@@ -1,9 +1,10 @@
 language: java
-jdk: openjdk16
+jdk:
+- openjdk16
 
 services:
   - docker
-
+  
 env:
   global:
     - secure: Pf/reZKKKMZUiT+yXEFB3xrC5B5QWU/wWKsHgJ3thoAGKO1IyEjH/mTUARe+ooicppPXUgx6CTsgkOu2iczCdmCh1SV/2qzJ73t3giMJd/KnSR4IALeJqt+Dh+Hz9Q57PrmwWBAcggAlwYuaQggDr0WRppDIj0O6fgKV+2ypJR75v2vRzMsSl2M9raQmXhl2beCaxF7+TwkTROgobvkTaZUHUbnHiye4kYsBrC8jplLMS+ItcdxwYW1qSu1wEOcgJ/Ok49l5yL76yGTiKG9zrx0jJNUMOT3dnElumbO/BTHeTTK8OEYMonDkzA9tMq3p682YlCHS/sumZkelK1kz3AEy/Cg+KKeoR1NkvXIhMVuE2U8vcmY/BMr6z6hyuD1oqa89wzM13Gzwup4OQEbDl/n0DHWXh5K9Njmc2n4nfTuzfU4cnMxH7+F95RyDMUCuV0h9LBE1I12RJUJzIKCYRukXf/yg+4l4WmrHQwSjwxntGDn4vp08azr7oPXSGXOtY48nkmYa6n21FtI5tx347wE98qPX1Z3bTSQl4edOQv/FZeOvXeJQ9TTMtgdPjPaozSSQjKBjBGET3UpYrWo1fog5movexOmJJftv4roqlShopCSn+BzIQZmYzCqTuafvD3J6whBbrIxB+sMgnWbU8e4JGQUL6EC9nzTPUrWs58s=
@@ -12,10 +13,11 @@ env:
     - secure: Jq5feH+4pK2n/ig1aKDSGsVDWH17mpVLYhT/oV7dNO51aUn+OAgVmGYlfoP4P+GuhhxTuuCEGX7Yjh68Fq0apIuE8hk4pb6KUpVF9p2F0fQjmXwz7CyfV26JmnINcdpxL3rInDxhasTsYSNXwURLQ4W14GInSBU/60ni6QA+FIsLrjGL+AGWImhZAvG0SHimyp6Gs5GL3QQkc3AHSEyYTqeWFm4ViuuErKWHN7wyl39h0bKbDgqjGOGqiePxP61jHlrNtCRW8C3nGjzeVzS+ABEVmGqBYKr5iG3ghjo7bSsf8leN23Lt9LEPbP24d/fIC9yFRtqMk89E8UsLbR8eAvpH3Kk6Iq+kgNpXcGM6FZ+WOItONsXF25657r5uxPncF57BHrXTIazm4Fl9ihuIQBQIewFsFQ2ss0IQnesfhz+rixhhtioz2iqKYtxpl2U3OWAhmfLeukmzXIZJ9LgssWIdjhnU05fRTL+lw++m0UpZfTM2c2uCkkxGDSEWIw3YC9sypRFCld7KeNA3175yI4RqlLNmSGVBVjNNjdwEnMwyVg/tjcJBOdGt9CiXYxcTdtP+YPAKCosByo7trfOz7jkScTBiZvuv9HZX2U7ZouanbHJT6ryVEIoEmqn3CmPZ784CEJM6gC02bmLcOB5WyTSeWwnDnyG4/dUFx2Ug4JU=
 
 script:
-  - "./mvnw clean package"
-  - docker build -t $IMAGE_NAME .
-  - docker login -u $DOCKER_USER -p $DOCKER_PASS
-  - docker push $IMAGE_NAME:latest
+- "./mvnw clean package"
+- docker build -t $IMAGE_NAME .
+- docker login -u $DOCKER_USER -p $DOCKER_PASS
+- docker push $IMAGE_NAME:latest
+
 deploy:
   provider: heroku
   api_key: "$HEROKU_API_KEY"
