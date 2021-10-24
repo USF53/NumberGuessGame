@@ -3,10 +3,7 @@ package edu.usfca.numberguessgame.service;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class GameServiceTest {
 
@@ -24,6 +21,7 @@ public class GameServiceTest {
 
         assertTrue(result);
     }
+
     @Test
     void testValidateUserBoundInputEmpty() {
         String input = "";
@@ -33,7 +31,7 @@ public class GameServiceTest {
     }
 
     @Test
-    void testValidateUserBoundInputNegative(){
+    void testValidateUserBoundInputNegative() {
         String input = "-9";
         boolean result = gameService.validateUserBoundInput(input);
 
@@ -41,7 +39,7 @@ public class GameServiceTest {
     }
 
     @Test
-    void testValidateUserBoundInputString(){
+    void testValidateUserBoundInputString() {
         String input = "string";
         boolean result = gameService.validateUserBoundInput(input);
 
@@ -49,7 +47,7 @@ public class GameServiceTest {
     }
 
     @Test
-    void testValidateUserBoundInputSymbol(){
+    void testValidateUserBoundInputSymbol() {
         String input = "..63/*%";
         boolean result = gameService.validateUserBoundInput(input);
 
@@ -57,7 +55,7 @@ public class GameServiceTest {
     }
 
     @Test
-    void testBoundCheck(){
+    void testBoundCheck() {
         int lowerBound = 1;
         int upperBound = 10;
 
@@ -67,7 +65,7 @@ public class GameServiceTest {
     }
 
     @Test
-    void testBoundCheckFalse(){
+    void testBoundCheckFalse() {
         int lowerBound = 20;
         int upperBound = 10;
 

@@ -10,5 +10,4 @@ public class NumberGuessGameApplication {
     public static void main(String[] args) {
         SpringApplication.run(NumberGuessGameApplication.class, args);
     }
-
 }

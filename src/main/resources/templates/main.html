@@ -3,7 +3,7 @@
 <head>
   <title>Page title</title>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta content="width=device-width, initial-scale=1" name="viewport">
   <style>
     /* Style the body */
     body {
@@ -22,7 +22,7 @@
 
     /* Page Content */
     .content {
-      padding:200px;
+      padding: 200px;
       text-align: center;
       background: #2C5F2D;
       color: #97BC62FF;
@@ -30,7 +30,7 @@
     }
 
     /* Button */
-    .button{
+    .button {
 
     }
   </style>
@@ -53,8 +53,8 @@
 <div class="content">
   <h1>The game is about to begin...</h1>
   <form action="/setBound" method="POST">
-    <input type="text" id="lowerBound" name="lowerBound" placeholder="Enter lower"><br>
-    <input type="text" id="upperBound" name="upperBound" placeholder="Enter lower"><br>
+    <input id="lowerBound" name="lowerBound" placeholder="Enter lower" type="text"><br>
+    <input id="upperBound" name="upperBound" placeholder="Enter lower" type="text"><br>
     <div class="button">
       <input type="submit" value="Submit">
     </div>

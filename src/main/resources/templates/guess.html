@@ -3,11 +3,11 @@
 <head>
     <title>Page title</title>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta content="width=device-width, initial-scale=1" name="viewport">
     <style>
         /* Style the body */
         body {
-            font-family: Arial,serif;
+            font-family: Arial, serif;
             margin: 0;
         }
 
@@ -22,7 +22,7 @@
 
         /* Page Content */
         .content {
-            padding:200px;
+            padding: 200px;
             text-align: center;
             background: #1868ae;
             color: #c6d7eb;
@@ -30,7 +30,7 @@
         }
 
         /* Button */
-        .button{
+        .button {
 
         }
     </style>
@@ -52,7 +52,7 @@
 
         <!--/*@thymesVar id="guess" type="edu"*/-->
         <label for="number" th:text="${guess}">Guess again, if you dare:</label><br>
-        <input type="text" id="number" name="number" placeholder="Enter New Number"><br>
+        <input id="number" name="number" placeholder="Enter New Number" type="text"><br>
         <div class="button">
             <input type="submit" value="Submit">
         </div>
