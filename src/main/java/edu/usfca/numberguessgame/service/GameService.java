@@ -17,8 +17,12 @@ public class GameService {
      * return false if the input is not an integer or it is smaller than 0
      * return true if the input is valid
      */
-    public boolean validateUserBoundInput(String input) {
-        return input.matches("[0-9]+") && Integer.parseInt(input) >= 0;
+    public int validateUserBoundInput(String input) {
+        if (input.matches("[0-9]+") && Integer.parseInt(input) >= 0){
+            return Integer.parseInt(input);
+        }else{
+            return -1;
+        }
     }
 
     /**
@@ -57,9 +61,9 @@ public class GameService {
      */
     public String handleSetBound(String lowerBound, String upperBound, HttpSession session) {
 
-        if (validateUserBoundInput(lowerBound) && validateUserBoundInput(upperBound)) {
-            int lower = Integer.parseInt(lowerBound);
-            int upper = Integer.parseInt(upperBound);
+        int lower = validateUserBoundInput(lowerBound);
+        int upper = validateUserBoundInput(upperBound);
+        if(lower!=-1 && upper!=-1){
 
             if (boundCheck(lower, upper)) {
 
