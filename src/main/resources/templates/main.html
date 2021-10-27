@@ -1,13 +1,13 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <title>Page title</title>
+  <title>Number Guess Game</title>
   <meta charset="UTF-8">
   <meta content="width=device-width, initial-scale=1" name="viewport">
   <style>
     /* Style the body */
     body {
-      font-family: Arial;
+      font-family: Arial,serif;
       margin: 0;
     }
 
@@ -53,8 +53,10 @@
 <div class="content">
   <h1>Please enter the Lower Bound and Upper Bound</h1>
   <form action="/setBound" method="POST">
-    <input id="lowerBound" name="lowerBound" placeholder="Enter lower" type="text"><br>
-    <input id="upperBound" name="upperBound" placeholder="Enter lower" type="text"><br>
+    <!--/*@thymesVar id="currId" type="edu"*/-->
+    <input type="hidden" th:value="${currId}" name="currId"/>
+    <label for="lowerBound"></label><input id="lowerBound" name="lowerBound" placeholder="Enter lower" type="text"><br>
+    <label for="upperBound"></label><input id="upperBound" name="upperBound" placeholder="Enter upper" type="text"><br>
     <div class="button">
       <input type="submit" value="Submit">
     </div>
