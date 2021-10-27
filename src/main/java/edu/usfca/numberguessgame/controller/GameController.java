@@ -3,14 +3,13 @@ package edu.usfca.numberguessgame.controller;
 import edu.usfca.numberguessgame.model.GuessRequest;
 import edu.usfca.numberguessgame.model.SetBoundRequest;
 import edu.usfca.numberguessgame.service.GameService;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-
-import javax.servlet.http.HttpSession;
 
 @Controller
 public class GameController {
@@ -24,33 +23,14 @@ public class GameController {
         return "main";
     }
 
-    @RequestMapping(value = "/setBound")
-    public String setBound(SetBoundRequest request, HttpSession session, Model model) {
-        String boundOutput = gameService.handleSetBound(request.getLowerBound(), request.getUpperBound(), session);
-
-        if (boundOutput.equals("Your Input Is Valid. Please Try To Guess It!")) {
-            model.addAttribute("bound", "");
-            return "guess";
-        } else {
-            model.addAttribute("bound", boundOutput);
-            return "main";
-        }
-
+    @PostMapping (value = "/setBound")
+    public String setBound(SetBoundRequest request,Model model) {
+        return gameService.handleSetBound(request.getLowerBound(), request.getUpperBound(),model);
     }
 
     @PostMapping("/guess")
-    public String guess(GuessRequest request, HttpSession session, Model model) {
-
-        String guessOutput = gameService.handleGuess(request.getNumber(), session);
-
-        if (guessOutput.equals("Correct!")) {
-            model.addAttribute("guess", "");
-            return "congrats";
-        } else {
-            model.addAttribute("guess", guessOutput);
-            return "guess";
-        }
-
+    public String guess(GuessRequest request,Model model) {
+        return gameService.handleGuess(request,model);
     }
 }
 

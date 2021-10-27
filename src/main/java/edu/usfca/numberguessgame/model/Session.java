@@ -2,24 +2,13 @@ package edu.usfca.numberguessgame.model;
 
 import org.springframework.data.mongodb.core.mapping.Document;
 
-@Document("user")
-public class User {
+@Document(collation = "session")
+public class Session {
 
+    private String _id;
     public int target;
     public int lowerBound;
     public int upperBound;
-    private String _id;
-
-    public User(int target, int lowerBound, int upperBound) {
-        super();
-        this.target = target;
-        this.lowerBound = lowerBound;
-        this.upperBound = upperBound;
-    }
-
-    public User() {
-        super();
-    }
 
     public int getTarget() {
         return target;
@@ -43,6 +32,17 @@ public class User {
 
     public void setUpperBound(int upperBound) {
         this.upperBound = upperBound;
+    }
+
+    public Session(int target, int lowerBound, int upperBound) {
+        super();
+        this.target = target;
+        this.lowerBound = lowerBound;
+        this.upperBound = upperBound;
+    }
+
+    public Session() {
+        super();
     }
 
     public String get_id() {

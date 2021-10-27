@@ -1,11 +1,12 @@
 package edu.usfca.numberguessgame.service;
 
-import edu.usfca.numberguessgame.model.User;
+import edu.usfca.numberguessgame.model.GuessRequest;
+import edu.usfca.numberguessgame.model.Session;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.stereotype.Service;
-
-import javax.servlet.http.HttpSession;
+import org.springframework.ui.Model;
 
 @Service
 public class GameService {
@@ -14,10 +15,10 @@ public class GameService {
     private MongoTemplate mongoTemplate;
 
     /**
-     * return false if the input is not an integer or it is smaller than 0
-     * return true if the input is valid
+     * return -1 if the input is not an integer it is smaller than 0
+     * return number if the input is valid
      */
-    public int validateUserBoundInput(String input) {
+    public int validateUserInput(String input) {
         if (input.matches("[0-9]+") && Integer.parseInt(input) >= 0){
             return Integer.parseInt(input);
         }else{
@@ -59,63 +60,84 @@ public class GameService {
     /**
      * message generator for Set bound
      */
-    public String handleSetBound(String lowerBound, String upperBound, HttpSession session) {
+    public String handleSetBound(String lowerBound, String upperBound, Model model) {
 
-        int lower = validateUserBoundInput(lowerBound);
-        int upper = validateUserBoundInput(upperBound);
+        String boundResponse;
+
+        int lower = validateUserInput(lowerBound);
+        int upper = validateUserInput(upperBound);
         if(lower!=-1 && upper!=-1){
 
             if (boundCheck(lower, upper)) {
 
                 int target = generateRandomInt(lower, upper);
 
-                User user = new User(target, lower, upper);
+                Session session = new Session(target, lower, upper);
 
-                User currUser = mongoTemplate.save(user);
+                Session currId =  mongoTemplate.save(session);
 
-                session.setAttribute("currId", currUser.get_id());
+                model.addAttribute("currId",currId.get_id());
 
+                boundResponse= "Your Input Is Valid. Please Try To Guess It!";
 
-                return "Your Input Is Valid. Please Try To Guess It!";
             } else {
-                System.out.println("Error! Make Sure Upper Bound Is Greater Than Lower Bound");
-                return "Error! Make Sure Upper Bound Is Greater Than Lower Bound";
+                boundResponse= "Error! Make Sure Upper Bound Is Greater Than Lower Bound";
             }
+        }else {
+            boundResponse= "Error! Make Sure You Entered Valid Bounds";
         }
-        return "Error! Make Sure You Entered Valid Bounds";
+
+        if(boundResponse.equals("Your Input Is Valid. Please Try To Guess It!")) {
+            model.addAttribute("bound",boundResponse);
+            return "guess";
+        }else {
+            model.addAttribute("bound",boundResponse);
+            return "main";
+        }
     }
 
     /**
      * message generator for Guess
      */
-    public String handleGuess(String number, HttpSession session) {
+
+    public String handleGuess(GuessRequest guessRequest, Model model) {
+        int target;
         int parsedNumber;
+        int compareResult;
 
-        String currId = (String) session.getAttribute("currId");
+        String guessResponse;
+        model.addAttribute("currId",guessRequest.getCurrId());
 
-        User user = mongoTemplate.findById(currId, User.class);
+        String currId = guessRequest.getCurrId();
 
-        if (user == null) {
+        Session session = mongoTemplate.findById(currId, Session.class);
+
+        if(session == null) {
             return "Error! The userId is not found";
         }
+        target = session.getTarget();
 
-        int target = user.getTarget();
+        parsedNumber = validateUserInput(guessRequest.getNumber());
+        compareResult = verifyGuess(target, parsedNumber);
 
-        try {
-            parsedNumber = Integer.parseInt(number);
-        } catch (Exception e) {
-            return "Error! Make Sure You Entered An Integer";
+        if (parsedNumber<0){
+            guessResponse=  "Error! Make Sure You Entered An Positive Integer";
+        }
+        else if(compareResult < 0) {
+            guessResponse= "Too Small!";
+        }
+        else if(compareResult > 0) {
+            guessResponse= "Too Large!";
+        }
+        else {
+            guessResponse= "Correct!";
         }
 
-        int compareResult = verifyGuess(target, parsedNumber);
-        if (parsedNumber < 0) {
-            return "Error! make Sure You Entered An Positive Integer";
-        } else if (compareResult < 0) {
-            return "Too Small!";
-        } else if (compareResult > 0) {
-            return "Too Large!";
-        } else {
-            return "Correct!";
+        if(guessResponse.equals("Correct!")) {
+            return "congrats";
+        }else {
+            model.addAttribute("guess",guessResponse);
+            return "guess";
         }
     }
 }

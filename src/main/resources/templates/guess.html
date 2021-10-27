@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <title>Page title</title>
+    <title>Number Guess Game</title>
     <meta charset="UTF-8">
     <meta content="width=device-width, initial-scale=1" name="viewport">
     <style>
@@ -48,11 +48,14 @@
 
 <div class="content">
     <h1>Start Your Guessing!</h1>
+    <!--/*@thymesVar id="bound" type="edu"*/-->
+    <p th:text="${bound}"></p>
     <form action="/guess" method="POST">
-
+        <!--/*@thymesVar id="currId" type="edu"*/-->
+        <input type="hidden" th:value="${currId}" name="currId"/>
         <!--/*@thymesVar id="guess" type="edu"*/-->
         <label for="number" th:text="${guess}">Guess again, if you dare:</label><br>
-        <input id="number" name="number" placeholder="Enter New Number" type="text"><br>
+        <input id="number" name="number" placeholder="Enter Your Guess" type="text"><br>
         <div class="button">
             <input type="submit" value="Submit">
         </div>
