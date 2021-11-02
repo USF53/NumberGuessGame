@@ -2,6 +2,9 @@ package edu.usfca.numberguessgame.service;
 
 import edu.usfca.numberguessgame.model.GuessRequest;
 import edu.usfca.numberguessgame.model.Session;
+import edu.usfca.numberguessgame.repository.SessionRepository;
+
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
@@ -11,8 +14,9 @@ import org.springframework.ui.Model;
 @Service
 public class GameService {
 
+	// change to SessionRepository
     @Autowired
-    private MongoTemplate mongoTemplate;
+    private SessionRepository sessionRepository;
 
     /**
      * return -1 if the input is not an integer it is smaller than 0
@@ -60,47 +64,41 @@ public class GameService {
     /**
      * message generator for Set bound
      */
-    public String handleSetBound(String lowerBound, String upperBound, Model model) {
-
-        String boundResponse;
+    public Session handleSetBound(String lowerBound, String upperBound, Model model) {
 
         int lower = validateUserInput(lowerBound);
         int upper = validateUserInput(upperBound);
-        if(lower!=-1 && upper!=-1){
-
-            if (boundCheck(lower, upper)) {
-
-                int target = generateRandomInt(lower, upper);
-
-                Session session = new Session(target, lower, upper);
-
-                Session currId =  mongoTemplate.save(session);
-
-                model.addAttribute("currId",currId.get_id());
-
-                boundResponse= "Your Input Is Valid. Please Try To Guess It!";
-
-            } else {
-                boundResponse= "Error! Make Sure Upper Bound Is Greater Than Lower Bound";
-            }
-        }else {
-            boundResponse= "Error! Make Sure You Entered Valid Bounds";
+        if(lower==-1 || upper==-1){
+        	// invalid bounds exception
+        	throw new RuntimeException("Error! Make Sure You Entered Valid Bounds");
         }
 
-        if(boundResponse.equals("Your Input Is Valid. Please Try To Guess It!")) {
-            model.addAttribute("bound",boundResponse);
-            return "guess";
-        }else {
-            model.addAttribute("bound",boundResponse);
-            return "main";
+        if (!boundCheck(lower, upper)) {
+        	// out of bounds exception
+        	throw new RuntimeException("Error! Make Sure Upper Bound Is Greater Than Lower Bound");
         }
+
+        int target = generateRandomInt(lower, upper);
+
+        Session session = new Session(target, lower, upper);
+
+        Session currId =  sessionRepository.save(session);
+        if (currId == null) {
+        	throw new RuntimeException("Error saving new session data");
+        }
+
+        model.addAttribute("currId",currId.getId());
+
+//        boundResponse= "Your Input Is Valid. Please Try To Guess It!";
+
+        return currId;
     }
 
     /**
      * message generator for Guess
      */
 
-    public String handleGuess(GuessRequest guessRequest, Model model) {
+    public Session handleGuess(GuessRequest guessRequest, Model model) {
         int target;
         int parsedNumber;
         int compareResult;
@@ -110,34 +108,40 @@ public class GameService {
 
         String currId = guessRequest.getCurrId();
 
-        Session session = mongoTemplate.findById(currId, Session.class);
+        Optional<Session> session = sessionRepository.findById(currId);
 
-        if(session == null) {
-            return "Error! The userId is not found";
+        if(session.isEmpty()) {
+//            return "Error! The userId is not found";
+        	// throw exception
         }
-        target = session.getTarget();
+        target = session.get().getTarget();
 
         parsedNumber = validateUserInput(guessRequest.getNumber());
         compareResult = verifyGuess(target, parsedNumber);
 
         if (parsedNumber<0){
             guessResponse=  "Error! Make Sure You Entered An Positive Integer";
+            // throw new Exception
         }
         else if(compareResult < 0) {
             guessResponse= "Too Small!";
+            // throw new Exception
         }
         else if(compareResult > 0) {
             guessResponse= "Too Large!";
+            // throw new Exception
         }
-        else {
-            guessResponse= "Correct!";
-        }
+//        else {
+//            guessResponse= "Correct!";
+//            return Session
+//        }
 
-        if(guessResponse.equals("Correct!")) {
-            return "congrats";
-        }else {
-            model.addAttribute("guess",guessResponse);
-            return "guess";
-        }
+//        if(guessResponse.equals("Correct!")) {
+//            return "congrats";
+//        }else {
+//            model.addAttribute("guess",guessResponse);
+//            return "guess";
+//        }
+        return session;
     }
 }

@@ -1,14 +1,15 @@
 package edu.usfca.numberguessgame.model;
 
-import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.data.annotation.Id;
 
-@Document(collation = "session")
 public class Session {
 
-    private String _id;
-    public int target;
-    public int lowerBound;
-    public int upperBound;
+	
+	@Id
+    private String id;
+    private int target;
+    private int lowerBound;
+    private int upperBound;
 
     public int getTarget() {
         return target;
@@ -45,11 +46,11 @@ public class Session {
         super();
     }
 
-    public String get_id() {
-        return _id;
+    public String getId() {
+        return id;
     }
 
-    public void set_id(String _id) {
-        this._id = _id;
+    public void setId(String id) {
+        this.id = id;
     }
 }
