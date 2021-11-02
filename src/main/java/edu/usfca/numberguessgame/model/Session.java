@@ -2,9 +2,12 @@ package edu.usfca.numberguessgame.model;
 
 import org.springframework.data.mongodb.core.mapping.Document;
 
-@Document(collation = "session")
+// TODO @Document(collation = "session")
 public class Session {
 
+    // TODO  change to id
+    // add @Id annotation
+    //
     private String _id;
     public int target;
     public int lowerBound;
@@ -45,10 +48,12 @@ public class Session {
         super();
     }
 
+    // camel case
     public String get_id() {
         return _id;
     }
 
+    // camel case
     public void set_id(String _id) {
         this._id = _id;
     }

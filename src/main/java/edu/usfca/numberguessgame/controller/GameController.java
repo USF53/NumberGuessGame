@@ -25,11 +25,21 @@ public class GameController {
 
     @PostMapping (value = "/setBound")
     public String setBound(SetBoundRequest request,Model model) {
+        // remove model from service call
+        // service should return session on success or throw an error
+        // surround with a try catch, then determine page based on error or success
+        // can get error message with exception that was caught
         return gameService.handleSetBound(request.getLowerBound(), request.getUpperBound(),model);
     }
 
     @PostMapping("/guess")
     public String guess(GuessRequest request,Model model) {
+        // remove model from service call
+        // pass session id and guess to function not the request
+        // or make a helper function that takes out the data from the guessrequest object
+        // service should return session on success or throw an error
+        // surround with a try catch, then determine page based on error or success
+        // can get error message with exception that was caught
         return gameService.handleGuess(request,model);
     }
 }
