@@ -18,6 +18,15 @@ script:
 - docker login -u $DOCKER_USER -p $DOCKER_PASS
 - docker push $IMAGE_NAME:latest
 
+after_success:
+  - wget https://raw.githubusercontent.com/DiscordHooks/travis-ci-discord-webhook/master/send.sh
+  - chmod +x send.sh
+  - ./send.sh success $WEBHOOK_URL
+after_failure:
+  - wget https://raw.githubusercontent.com/DiscordHooks/travis-ci-discord-webhook/master/send.sh
+  - chmod +x send.sh
+  - ./send.sh failure $WEBHOOK_URL
+
 deploy:
   provider: heroku
   api_key: "$HEROKU_API_KEY"
