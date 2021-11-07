@@ -27,6 +27,7 @@ after_failure:
   - chmod +x send.sh
   - ./send.sh failure $WEBHOOK_URL
 
+
 deploy:
   provider: heroku
   api_key: "$HEROKU_API_KEY"
