@@ -1,28 +1,29 @@
 package edu.usfca.numberguessgame.service;
-import edu.usfca.numberguessgame.models.Session;
 
+import edu.usfca.numberguessgame.model.GuessRequest;
+import edu.usfca.numberguessgame.model.Session;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.stereotype.Service;
+import org.springframework.ui.Model;
 
 @Service
 public class GameService {
 
-    private int target;
-    public Session session = new Session();
-
-    private int getTarget() {
-        return target;
-    }
-
-    private void setTarget(int target) {
-        this.target = target;
-    }
+    @Autowired
+    private MongoTemplate mongoTemplate;
 
     /**
-     * return false if the input is not an integer or it is smaller than 0
-     * return true if the input is valid
+     * return -1 if the input is not an integer it is smaller than 0
+     * return number if the input is valid
      */
-    public boolean validateUserBoundInput(String input){
-        return input.matches("[0-9]+") && Integer.parseInt(input) >= 0;
+    public int validateUserInput(String input) {
+        if (input.matches("[0-9]+") && Integer.parseInt(input) >= 0){
+            return Integer.parseInt(input);
+        }else{
+            return -1;
+        }
     }
 
     /**
@@ -37,7 +38,7 @@ public class GameService {
      * return a random integer which is larger than or equals to lowerBound and smaller than or equals to upperBound
      */
     public int generateRandomInt(int lowerBound, int upperBound) {
-        return (int)(Math.random()*(upperBound - lowerBound + 1)) + lowerBound;
+        return (int) (Math.random() * (upperBound - lowerBound + 1)) + lowerBound;
 
     }
 
@@ -47,13 +48,11 @@ public class GameService {
      * return 1 if the guess number is larger than the target.
      */
     public int verifyGuess(int target, int guess) {
-        if(guess == target) {
+        if (guess == target) {
             return 0;
-        }
-        else if(guess < target) {
+        } else if (guess < target) {
             return -1;
-        }
-        else {
+        } else {
             return 1;
         }
     }
@@ -61,51 +60,84 @@ public class GameService {
     /**
      * message generator for Set bound
      */
-    public String handleSetBound(String lowerBound, String upperBound) {
-        if (validateUserBoundInput(lowerBound) && validateUserBoundInput(upperBound)) {
-            int lower = Integer.parseInt(lowerBound);
-            int upper = Integer.parseInt(upperBound);
+    public String handleSetBound(String lowerBound, String upperBound, Model model) {
 
-            session.setLowerBound(lowerBound);
-            session.setUpperBound(upperBound);
-            session.setGeneratorValue(target);
+        String boundResponse;
+
+        int lower = validateUserInput(lowerBound);
+        int upper = validateUserInput(upperBound);
+        if(lower!=-1 && upper!=-1){
 
             if (boundCheck(lower, upper)) {
-                setTarget(generateRandomInt(lower, upper));
-                return "Your Input Is Valid. Please Try To Guess It!";
+
+                int target = generateRandomInt(lower, upper);
+
+                Session session = new Session(target, lower, upper);
+
+                Session currId =  mongoTemplate.save(session);
+
+                model.addAttribute("currId",currId.get_id());
+
+                boundResponse= "Your Input Is Valid. Please Try To Guess It!";
+
             } else {
-                return "Error! Make Sure Upper Bound Is Greater Than Lower Bound";
+                boundResponse= "Error! Make Sure Upper Bound Is Greater Than Lower Bound";
             }
+        }else {
+            boundResponse= "Error! Make Sure You Entered Valid Bounds";
         }
-        return "Error! Make Sure You Entered Valid Bounds";
+
+        if(boundResponse.equals("Your Input Is Valid. Please Try To Guess It!")) {
+            model.addAttribute("bound",boundResponse);
+            return "guess";
+        }else {
+            model.addAttribute("bound",boundResponse);
+            return "main";
+        }
     }
 
     /**
      * message generator for Guess
      */
 
-    public String handleGuess(String number) {
+    public String handleGuess(GuessRequest guessRequest, Model model) {
+        int target;
         int parsedNumber;
-        int target = getTarget();
+        int compareResult;
 
-        try {
-            parsedNumber = Integer.parseInt(number);
-        } catch (Exception e) {
-            return "Error! Make Sure You Entered An Integer";
+        String guessResponse;
+        model.addAttribute("currId",guessRequest.getCurrId());
+
+        String currId = guessRequest.getCurrId();
+
+        Session session = mongoTemplate.findById(currId, Session.class);
+
+        if(session == null) {
+            return "Error! The userId is not found";
         }
+        target = session.getTarget();
 
-        int compareResult = verifyGuess(target, parsedNumber);
+        parsedNumber = validateUserInput(guessRequest.getNumber());
+        compareResult = verifyGuess(target, parsedNumber);
+
         if (parsedNumber<0){
-            return "Error! make Sure You Entered An Positive Integer";
+            guessResponse=  "Error! Make Sure You Entered An Positive Integer";
         }
         else if(compareResult < 0) {
-            return "Too Small!";
+            guessResponse= "Too Small!";
         }
         else if(compareResult > 0) {
-            return "Too Large!";
+            guessResponse= "Too Large!";
         }
         else {
-            return "Correct!";
+            guessResponse= "Correct!";
+        }
+
+        if(guessResponse.equals("Correct!")) {
+            return "congrats";
+        }else {
+            model.addAttribute("guess",guessResponse);
+            return "guess";
         }
     }
 }

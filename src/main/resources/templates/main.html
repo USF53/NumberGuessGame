@@ -1,13 +1,13 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <title>Page title</title>
+  <title>Number Guess Game</title>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta content="width=device-width, initial-scale=1" name="viewport">
   <style>
     /* Style the body */
     body {
-      font-family: Arial;
+      font-family: Arial,serif;
       margin: 0;
     }
 
@@ -15,22 +15,22 @@
     .header {
       padding: 60px;
       text-align: center;
-      background: #949398FF;
-      color: #F4DF4EFF;
+      background: #8B8C8C;
+      color: #F8F1E0;
       font-size: 30px;
     }
 
     /* Page Content */
     .content {
-      padding:200px;
+      padding: 200px;
       text-align: center;
-      background: #2C5F2D;
-      color: #97BC62FF;
+      background: #BCCBB0;
+      color: #606F65;
       font-size: 30px;
     }
 
     /* Button */
-    .button{
+    .button {
 
     }
   </style>
@@ -39,7 +39,10 @@
 
 <div class="header">
   <h1>Number Guessing Game</h1>
-  <p>You guess a Number!</p>
+  <p>Good Luck!</p>
+
+  <!--/*@thymesVar id="bound" type="edu"*/-->
+  <p th:text="${bound}"></p>
 </div>
 
 <script>
@@ -48,10 +51,12 @@
 
 
 <div class="content">
-  <h1>The game is about to begin...</h1>
-  <form action="/guess" method="POST">
-    <label for="number">Guess, if you dare:</label><br>
-    <input type="text" id="number" name="number" placeholder="Enter Number"><br>
+  <h1>Please enter the Lower Bound and Upper Bound</h1>
+  <form action="/setBound" method="POST">
+    <!--/*@thymesVar id="currId" type="edu"*/-->
+    <input type="hidden" th:value="${currId}" name="currId"/>
+    <label for="lowerBound"></label><input id="lowerBound" name="lowerBound" placeholder="Enter lower" type="text"><br>
+    <label for="upperBound"></label><input id="upperBound" name="upperBound" placeholder="Enter upper" type="text"><br>
     <div class="button">
       <input type="submit" value="Submit">
     </div>
@@ -61,3 +66,4 @@
 
 </body>
 </html>
+

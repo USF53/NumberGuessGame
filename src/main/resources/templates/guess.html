@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Number Guess Game</title>
+    <meta charset="UTF-8">
+    <meta content="width=device-width, initial-scale=1" name="viewport">
+    <style>
+        /* Style the body */
+        body {
+            font-family: Arial, serif;
+            margin: 0;
+        }
+
+        /* Header/Logo Title */
+        .header {
+            padding: 60px;
+            text-align: center;
+            background: rgb(229,227,221);
+            color: #e5e5dc;
+            font-size: 30px;
+        }
+
+        /* Page Content */
+        .content {
+            padding: 200px;
+            text-align: center;
+            background: rgb(153,164,188);
+            color: rgb(75,92,116);
+            font-size: 30px;
+        }
+
+        /* Button */
+        .button {
+
+        }
+    </style>
+</head>
+<body>
+
+<div class="header">
+
+</div>
+
+<script>
+
+</script>
+
+
+<div class="content">
+    <h1>Start Your Guessing!</h1>
+    <!--/*@thymesVar id="bound" type="edu"*/-->
+    <p th:text="${bound}"></p>
+    <form action="/guess" method="POST">
+        <!--/*@thymesVar id="currId" type="edu"*/-->
+        <input type="hidden" th:value="${currId}" name="currId"/>
+        <!--/*@thymesVar id="guess" type="edu"*/-->
+        <label for="number" th:text="${guess}">Guess again, if you dare:</label><br>
+        <input id="number" name="number" placeholder="Enter Your Guess" type="text"><br>
+        <div class="button">
+            <input type="submit" value="Submit">
+        </div>
+    </form>
+</div>
+
+
+</body>
+</html>
