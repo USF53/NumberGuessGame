@@ -49,32 +49,12 @@ public class GameService {
     }
 
     /**
-     * return 0 if the guess number equals to the target;
-     * return -1 if the guess number is smaller than the target;
-     * return 1 if the guess number is larger than the target.
-     */
-    public int verifyGuess(int target, int guess) {
-        if (guess == target) {
-            return 0;
-        } else if (guess < target) {
-            return -1;
-        } else {
-            return 1;
-        }
-    }
-
-    /**
      * message generator for Set bound
      */
     public Session handleSetBound(String lowerBound, String upperBound) {
 
         int lower = validateUserInput(lowerBound);
         int upper = validateUserInput(upperBound);
-
-        if(lower == -1 || upper == -1) {
-            // invalid bounds exception
-            throw new RuntimeException("Error! Make Sure You Entered Valid Bounds");
-        }
 
         if (!boundCheck(lower, upper)) {
             // out of bounds exception
@@ -110,18 +90,15 @@ public class GameService {
         target = session.get().getTarget();
 
         parsedNumber = validateUserInput(number);
-        compareResult = verifyGuess(target, parsedNumber);
 
-        if (parsedNumber < 0){
-            throw new RuntimeException("Error! Make Sure You Entered An Positive Integer");
-        }
-        else if(compareResult < 0) {
+        if (parsedNumber < target) {
             throw new RuntimeException("Too Small!");
-        }
-        else if(compareResult > 0) {
+        } else if (parsedNumber > target) {
             throw new RuntimeException("Too Large!");
         }
 
         return session.get();
     }
+
+
 }
