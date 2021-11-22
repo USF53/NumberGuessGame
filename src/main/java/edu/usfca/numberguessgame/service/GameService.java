@@ -76,7 +76,6 @@ public class GameService {
     /**
      * message generator for Guess
      */
-
     public Session handleGuess(String currId, String number) {
         int target;
         int parsedNumber;
@@ -99,6 +98,4 @@ public class GameService {
 
         return session.get();
     }
-
-
 }

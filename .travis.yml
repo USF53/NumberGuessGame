@@ -29,8 +29,28 @@ after_failure:
 
 
 deploy:
-  provider: heroku
+- provider: heroku
   api_key: "$HEROKU_API_KEY"
   app: numberguess-game
   on:
     repo: USF53/NumberGuessGame
+
+- provider: s3
+  access_key_id: $AWS_ACCESS_KEY
+  secret_access_key: $AWS_SECRET_KEY
+  local_dir: dpl_cd_upload
+  skip_cleanup: true
+  on: &2
+    repo: USF53/NumberGuessGame
+  bucket: numberguessgamebucket
+  region: us-west-1
+
+- provider: codedeploy
+  access_key_id: $AWS_ACCESS_KEY
+  secret_access_key: $AWS_SECRET_KEY
+  key: latest.zip
+  bundle_type: zip
+  application: NumberGuessGame
+  deployment_group: NumberGuessGame
+  region: us-east-2
+  on: *2
