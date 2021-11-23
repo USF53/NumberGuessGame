@@ -85,28 +85,6 @@ public class GameServiceTest {
         assertTrue(result <= upperBound);
     }
 
-    @Test
-    void testVerifyGuess() {
 
-        int result = gameService.verifyGuess(100, 100);
-
-        assertEquals(0, result);
-    }
-
-    @Test
-    void testVerifyGuessSmall() {
-
-        int result = gameService.verifyGuess(100, 88);
-
-        assertEquals(-1, result);
-    }
-
-    @Test
-    void testVerifyGuessLarge() {
-
-        int result = gameService.verifyGuess(100, 200);
-
-        assertEquals(1, result);
-    }
 
 }

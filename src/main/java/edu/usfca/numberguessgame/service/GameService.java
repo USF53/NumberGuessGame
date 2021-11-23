@@ -1,27 +1,33 @@
 package edu.usfca.numberguessgame.service;
 
-import edu.usfca.numberguessgame.model.GuessRequest;
 import edu.usfca.numberguessgame.model.Session;
+import edu.usfca.numberguessgame.repository.SessionRepository;
+
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.stereotype.Service;
-import org.springframework.ui.Model;
 
 @Service
 public class GameService {
 
     @Autowired
-    private MongoTemplate mongoTemplate;
+    private SessionRepository sessionRepository;
 
     /**
      * return -1 if the input is not an integer it is smaller than 0
      * return number if the input is valid
      */
     public int validateUserInput(String input) {
-        if (input.matches("[0-9]+") && Integer.parseInt(input) >= 0){
-            return Integer.parseInt(input);
-        }else{
+        int parseInt;
+        try{
+            parseInt = Integer.parseInt(input);
+        } catch (NumberFormatException e) {
+            return -1;
+        }
+        if (input.matches("[0-9]+") && parseInt >= 0){
+            return parseInt;
+        } else {
             return -1;
         }
     }
@@ -43,101 +49,53 @@ public class GameService {
     }
 
     /**
-     * return 0 if the guess number equals to the target;
-     * return -1 if the guess number is smaller than the target;
-     * return 1 if the guess number is larger than the target.
-     */
-    public int verifyGuess(int target, int guess) {
-        if (guess == target) {
-            return 0;
-        } else if (guess < target) {
-            return -1;
-        } else {
-            return 1;
-        }
-    }
-
-    /**
      * message generator for Set bound
      */
-    public String handleSetBound(String lowerBound, String upperBound, Model model) {
-
-        String boundResponse;
+    public Session handleSetBound(String lowerBound, String upperBound) {
 
         int lower = validateUserInput(lowerBound);
         int upper = validateUserInput(upperBound);
-        if(lower!=-1 && upper!=-1){
 
-            if (boundCheck(lower, upper)) {
-
-                int target = generateRandomInt(lower, upper);
-
-                Session session = new Session(target, lower, upper);
-
-                Session currId =  mongoTemplate.save(session);
-
-                model.addAttribute("currId",currId.get_id());
-
-                boundResponse= "Your Input Is Valid. Please Try To Guess It!";
-
-            } else {
-                boundResponse= "Error! Make Sure Upper Bound Is Greater Than Lower Bound";
-            }
-        }else {
-            boundResponse= "Error! Make Sure You Entered Valid Bounds";
+        if (!boundCheck(lower, upper)) {
+            // out of bounds exception
+            throw new RuntimeException("Error! Make Sure Upper Bound Is Greater Than Lower Bound");
         }
 
-        if(boundResponse.equals("Your Input Is Valid. Please Try To Guess It!")) {
-            model.addAttribute("bound",boundResponse);
-            return "guess";
-        }else {
-            model.addAttribute("bound",boundResponse);
-            return "main";
+        int target = generateRandomInt(lower, upper);
+
+        Session session = new Session(target, lower, upper);
+
+        Session currId =  sessionRepository.save(session);
+        if (currId == null) {
+            throw new RuntimeException("Error saving new session data");
         }
+
+        return currId;
     }
 
     /**
      * message generator for Guess
      */
-
-    public String handleGuess(GuessRequest guessRequest, Model model) {
+    public Session handleGuess(String currId, String number) {
         int target;
         int parsedNumber;
         int compareResult;
 
-        String guessResponse;
-        model.addAttribute("currId",guessRequest.getCurrId());
+        Optional<Session> session = sessionRepository.findById(currId);
 
-        String currId = guessRequest.getCurrId();
-
-        Session session = mongoTemplate.findById(currId, Session.class);
-
-        if(session == null) {
-            return "Error! The userId is not found";
+        if(session.isEmpty()) {
+            throw new RuntimeException("Error! The userId is not found");
         }
-        target = session.getTarget();
+        target = session.get().getTarget();
 
-        parsedNumber = validateUserInput(guessRequest.getNumber());
-        compareResult = verifyGuess(target, parsedNumber);
+        parsedNumber = validateUserInput(number);
 
-        if (parsedNumber<0){
-            guessResponse=  "Error! Make Sure You Entered An Positive Integer";
-        }
-        else if(compareResult < 0) {
-            guessResponse= "Too Small!";
-        }
-        else if(compareResult > 0) {
-            guessResponse= "Too Large!";
-        }
-        else {
-            guessResponse= "Correct!";
+        if (parsedNumber < target) {
+            throw new RuntimeException("Too Small!");
+        } else if (parsedNumber > target) {
+            throw new RuntimeException("Too Large!");
         }
 
-        if(guessResponse.equals("Correct!")) {
-            return "congrats";
-        }else {
-            model.addAttribute("guess",guessResponse);
-            return "guess";
-        }
+        return session.get();
     }
 }
